@@ -43,7 +43,6 @@ void Asset::observeMarket()
   calcPriceLevels();
   
   // Check whether trade is viable, and if so trade
-  waitDays--;
   if (currentTime >= numDays)
     executeTrade();
   
@@ -83,16 +82,20 @@ void Asset::calcPriceLevels()
 void Asset::executeTrade()
 {
   double oldQuantity = quantity;
-  std::cout << "current price is " << currentPrice << " and buy is " << buyPrice << " and sell is " << sellPrice << std::endl;
+  //  std::cout << "current price is " << currentPrice << " and buy is " << buyPrice << " and sell is " << sellPrice << std::endl;
   // Make a function that says, depending on how big the delta is, how much we trade
   if (currentPrice <= buyPrice)
-    quantity++;
+    {
+      if (quantity <= 25)
+	quantity++;
+    }
   //	quantity = quantity + std::min(2.5,(currentPrice - buyPrice)*(currentPrice - buyPrice)/100);
   if (currentPrice >= sellPrice)
-      //      quantity = std::max(quantity - std::max(5.0, (currentPrice - sellPrice)*(currentPrice - sellPrice)/20), 0.0);
+    {
       if (quantity > 0)
 	quantity--;
     }
+        //      quantity = std::max(quantity - std::max(5.0, (currentPrice - sellPrice)*(currentPrice - sellPrice)/20), 0.0);
   // Std::cout << "Q is " <<  quantity << std::endl;
   double qChange = oldQuantity - quantity; // How much we sold/bought
   double pChange = qChange * currentPrice; // How did we get/spend
